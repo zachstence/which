@@ -21,7 +21,11 @@ export type Session = typeof sessions.$inferSelect;
 
 export const names = pgTable('names', {
 	id: serial('id').primaryKey(),
-	name: text('name').notNull().unique()
+	name: text('name').notNull().unique(),
+	creatorId: text('creator_id')
+		.notNull()
+		.references(() => users.id),
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow()
 });
 
 export type Name = typeof names.$inferSelect;
