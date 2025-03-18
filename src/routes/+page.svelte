@@ -6,13 +6,13 @@
 </script>
 
 {#if data.randomNames}
-	<div class="flex h-3/4 w-3/4 flex-col items-center justify-center gap-16 lg:flex-row">
+	<div class="group flex h-3/4 w-3/4 flex-col items-center justify-center gap-16 lg:flex-row">
 		<form method="POST" action="?/vote" use:enhance class="contents">
 			<input name="losingNameId" value={data.randomNames[1].id} type="hidden" class="sr-only" />
 			<input name="winningNameId" value={data.randomNames[0].id} type="hidden" class="sr-only" />
 			<button
 				type="submit"
-				class="btn btn-primary w-full flex-1 overflow-hidden text-center text-xl font-semibold text-wrap break-all lg:h-full lg:w-auto xl:text-2xl"
+				class="btn btn-primary hover:btn-success group-hover:btn-error w-full flex-1 overflow-hidden rounded-2xl text-center text-xl font-semibold text-wrap break-all lg:h-full lg:w-auto xl:text-2xl"
 			>
 				{data.randomNames[0].name}
 			</button>
@@ -31,7 +31,7 @@
 			<input name="winningNameId" value={data.randomNames[1].id} type="hidden" class="sr-only" />
 			<button
 				type="submit"
-				class="btn btn-primary w-full flex-1 overflow-hidden text-center text-xl font-semibold text-wrap break-all lg:h-full lg:w-auto xl:text-2xl"
+				class="btn btn-primary hover:btn-success group-hover:btn-error w-full flex-1 overflow-hidden rounded-2xl text-center text-xl font-semibold text-wrap break-all lg:h-full lg:w-auto xl:text-2xl"
 			>
 				{data.randomNames[1].name}
 			</button>
