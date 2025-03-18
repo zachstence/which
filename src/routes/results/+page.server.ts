@@ -1,14 +1,11 @@
 import { db } from '$lib/server/db';
 import { names, users, votes } from '$lib/server/db/schema';
-import { aliasedTable, count, desc, eq, sql } from 'drizzle-orm';
+import { aliasedTable, desc, eq, or, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
 const winningName = aliasedTable(names, 'winningName');
 const losingName = aliasedTable(names, 'losingName');
-
-const wins = aliasedTable(votes, 'wins');
-const losses = aliasedTable(votes, 'losses');
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -31,16 +28,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const mostPopularNames = await db
 		.select({
 			name: names.name,
-			wins: count(wins.id),
-			losses: count(losses.id),
-			diff: sql`COUNT(${wins.id}) - COUNT(${losses.id})`,
-			totalVotes: sql`COUNT(${wins.id}) + COUNT(${losses.id})`
+			wins: sql<number>`COUNT(DISTINCT CASE WHEN ${votes.winningNameId} = ${names.id} THEN ${votes.id} END)::INTEGER`,
+			losses: sql<number>`COUNT(DISTINCT CASE WHEN ${votes.losingNameId} = ${names.id} THEN ${votes.id} END)::INTEGER`
 		})
 		.from(names)
-		.leftJoin(wins, eq(names.id, wins.winningNameId))
-		.leftJoin(losses, eq(names.id, losses.losingNameId))
+		.leftJoin(votes, or(eq(names.id, votes.winningNameId), eq(names.id, votes.losingNameId)))
 		.groupBy(names.id)
-		.orderBy(desc(sql`COUNT(${wins.id}) - COUNT(${losses.id})`))
+		.orderBy(
+			desc(
+				sql`COUNT(DISTINCT CASE WHEN ${votes.winningNameId} = ${names.id} THEN ${votes.id} END)::INTEGER - COUNT(DISTINCT CASE WHEN ${votes.losingNameId} = ${names.id} THEN ${votes.id} END)::INTEGER`
+			)
+		)
 		.limit(10);
 
 	return { user: locals.user, allVotes, mostPopularNames };

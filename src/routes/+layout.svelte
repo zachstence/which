@@ -6,7 +6,7 @@
 	let { data, children }: LayoutProps = $props();
 </script>
 
-<div class="flex h-screen w-screen flex-col items-center justify-center">
+<div class="flex h-screen w-screen flex-col items-center justify-center gap-4 overflow-hidden">
 	<header class="navbar shrink-0 select-none">
 		<span class="navbar-start text-xl italic">Which?</span>
 		<div class="navbar-center flex flex-row items-center justify-center gap-4">
@@ -23,11 +23,11 @@
 		</div>
 	</header>
 
-	<main class="container flex flex-1 items-center justify-center">
+	<main class="container flex min-h-0 flex-1 items-center justify-center">
 		{@render children()}
 	</main>
 
 	<footer class="flex w-full shrink-0 flex-row items-center justify-end">
-		<a href="https://github.com/zachstence/which">GitHub</a>
+		<a href="https://github.com/zachstence/which" class="btn btn-ghost rounded-full">GitHub</a>
 	</footer>
 </div>
