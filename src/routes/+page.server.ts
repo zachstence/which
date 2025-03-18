@@ -5,17 +5,10 @@ import { db } from '$lib/server/db';
 import { names, votes, type Name } from '$lib/server/db/schema';
 import { selectRandom } from '$lib/server/db/selectRandom';
 
-export const load: PageServerLoad = async (event) => {
-	if (!event.locals.user) {
-		return redirect(302, '/login');
-	}
-
+export const load: PageServerLoad = async () => {
 	const randomNames = (await selectRandom(names, 2)) as [Name, Name];
 
-	return {
-		user: event.locals.user,
-		randomNames
-	};
+	return { randomNames };
 };
 
 export const actions: Actions = {
