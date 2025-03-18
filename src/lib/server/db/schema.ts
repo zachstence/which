@@ -25,3 +25,21 @@ export const names = pgTable('names', {
 });
 
 export type Name = typeof names.$inferSelect;
+
+export const votes = pgTable('votes', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id),
+	winningNameId: integer('winning_name_id')
+		.notNull()
+		.references(() => names.id),
+	losingNameId: integer('losing_name_id')
+		.notNull()
+		.references(() => names.id),
+	votePlacedAt: timestamp('vote_placed_at', { withTimezone: true, mode: 'date' })
+		.notNull()
+		.defaultNow()
+});
+
+export type Vote = typeof votes.$inferSelect;

@@ -5,8 +5,14 @@
 	let { data }: { data: PageServerData } = $props();
 </script>
 
-<h1>Hi, {data.user.username}!</h1>
-<p>Your user ID is {data.user.id}.</p>
-<form method="post" action="?/logout" use:enhance>
-	<button>Sign out</button>
+<form method="POST" action="?/vote" use:enhance>
+	<input name="losingNameId" value={data.randomNames[1].id} type="hidden" />
+	<input name="winningNameId" value={data.randomNames[0].id} type="hidden" />
+	<button type="submit">{data.randomNames[0].name}</button>
+</form>
+
+<form method="POST" action="?/vote" use:enhance>
+	<input name="losingNameId" value={data.randomNames[0].id} type="hidden" />
+	<input name="winningNameId" value={data.randomNames[1].id} type="hidden" />
+	<button type="submit">{data.randomNames[1].name}</button>
 </form>
