@@ -2,6 +2,7 @@ import { db } from '$lib/server/db';
 import { names, users, votes } from '$lib/server/db/schema';
 import { aliasedTable, count, desc, eq, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
+import { redirect } from '@sveltejs/kit';
 
 const winningName = aliasedTable(names, 'winningName');
 const losingName = aliasedTable(names, 'losingName');
@@ -9,7 +10,11 @@ const losingName = aliasedTable(names, 'losingName');
 const wins = aliasedTable(votes, 'wins');
 const losses = aliasedTable(votes, 'losses');
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+	if (!locals.user) {
+		redirect(302, '/login');
+	}
+
 	const allVotes = await db
 		.select({
 			voteId: votes.id,
@@ -38,5 +43,5 @@ export const load: PageServerLoad = async () => {
 		.orderBy(desc(sql`COUNT(${wins.id}) - COUNT(${losses.id})`))
 		.limit(10);
 
-	return { allVotes, mostPopularNames };
+	return { user: locals.user, allVotes, mostPopularNames };
 };
