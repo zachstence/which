@@ -8,8 +8,10 @@ import * as table from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
+	console.log('login load', event.locals.user);
 	if (event.locals.user) {
-		return redirect(302, '/');
+		console.log('go to /');
+		redirect(302, '/');
 	}
 	return {};
 };

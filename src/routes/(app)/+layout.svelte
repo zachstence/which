@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { LayoutProps } from './$types';
-	import '../app.css';
+	import '../../app.css';
 
 	let { data, children }: LayoutProps = $props();
 </script>
