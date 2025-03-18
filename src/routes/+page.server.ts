@@ -6,9 +6,15 @@ import { names, votes, type Name } from '$lib/server/db/schema';
 import { selectRandom } from '$lib/server/db/selectRandom';
 
 export const load: PageServerLoad = async () => {
-	const randomNames = (await selectRandom(names, 2)) as [Name, Name];
+	const randomNames = await selectRandom(names, 2);
 
-	return { randomNames };
+	if (randomNames.length !== 2) {
+		return {
+			randomNames: undefined
+		};
+	}
+
+	return { randomNames: randomNames as [Name, Name] };
 };
 
 export const actions: Actions = {
